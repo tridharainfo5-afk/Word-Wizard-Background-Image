@@ -1,0 +1,29 @@
+name: Rotate Daily Background
+
+on:
+  schedule:
+    - cron: '30 18 * * *'
+  workflow_dispatch:
+
+jobs:
+  rotate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Copy today's background
+        run: |
+          TODAY=$(date +'%-d-%B')
+          echo "Looking for: ${TODAY}.jpg"
+          cp "${TODAY}.jpg" background.jpg
+
+      - name: Commit & Push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions@github.com"
+          git add background.jpg
+          git commit -m "Background: ${TODAY}.jpg" || echo "No change"
+          git push
