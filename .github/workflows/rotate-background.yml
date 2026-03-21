@@ -16,12 +16,13 @@ jobs:
 
       - name: Copy today's background
         run: |
-          TODAY=$(date +'%-d-%B')
+          TODAY=$(TZ='Asia/Kolkata' date +'%-d-%B')
           echo "Looking for: ${TODAY}.jpg"
           cp "${TODAY}.jpg" background.jpg
 
       - name: Commit & Push
         run: |
+          TODAY=$(TZ='Asia/Kolkata' date +'%-d-%B')
           git config user.name "github-actions[bot]"
           git config user.email "github-actions@github.com"
           git add background.jpg
