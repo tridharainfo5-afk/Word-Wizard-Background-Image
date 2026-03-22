@@ -14,10 +14,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Copy today's background
+      - name: Rotate background
         run: |
+          YESTERDAY=$(TZ='Asia/Kolkata' date -d 'yesterday' +'%-d-%B')
           TODAY=$(TZ='Asia/Kolkata' date +'%-d-%B')
-          echo "Looking for: ${TODAY}.jpg"
+          echo "Restoring: background.jpg → ${YESTERDAY}.jpg"
+          cp background.jpg "${YESTERDAY}.jpg"
+          echo "New background: ${TODAY}.jpg"
           cp "${TODAY}.jpg" background.jpg
 
       - name: Commit & Push
@@ -25,6 +28,7 @@ jobs:
           TODAY=$(TZ='Asia/Kolkata' date +'%-d-%B')
           git config user.name "github-actions[bot]"
           git config user.email "github-actions@github.com"
-          git add background.jpg
+          git add background.jpg "${YESTERDAY}.jpg" || true
+          git add -A
           git commit -m "Background: ${TODAY}.jpg" || echo "No change"
           git push
