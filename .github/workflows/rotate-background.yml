@@ -2,7 +2,7 @@ name: Rotate Daily Background
 
 on:
   schedule:
-    - cron: '30 18 * * *'
+    - cron: '0 12 * * *'
   workflow_dispatch:
 
 jobs:
@@ -25,10 +25,10 @@ jobs:
 
       - name: Commit & Push
         run: |
+          YESTERDAY=$(TZ='Asia/Kolkata' date -d 'yesterday' +'%-d-%B')
           TODAY=$(TZ='Asia/Kolkata' date +'%-d-%B')
           git config user.name "github-actions[bot]"
           git config user.email "github-actions@github.com"
-          git add background.jpg "${YESTERDAY}.jpg" || true
           git add -A
           git commit -m "Background: ${TODAY}.jpg" || echo "No change"
           git push
